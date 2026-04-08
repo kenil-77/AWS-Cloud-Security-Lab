@@ -1,0 +1,95 @@
+timestamp,event,severity,reason,user,user_type,source_ip,region,error_code
+2026-04-03T23:57:14Z,CreateSecurityGroup,HIGH,A new security group (firewall) was created,kenil-admin,IAMUser,99.225.26.160,ca-central-1,
+2026-04-03T23:57:14Z,AuthorizeSecurityGroupIngress,HIGH,A firewall rule was opened - check if it exposes ports to the internet,kenil-admin,IAMUser,99.225.26.160,ca-central-1,
+2026-04-03T23:04:52Z,CreateAccessKey,HIGH,A new access key was created - these are permanent credentials,kenil-admin,IAMUser,99.225.26.160,us-east-1,
+2026-04-03T23:53:44Z,CreateLoginProfile,HIGH,Console login was enabled for a user - they can now access the web console,kenil-admin,IAMUser,99.225.26.160,us-east-1,
+2026-04-03T23:53:44Z,AttachUserPolicy,HIGH,A policy was attached to a user - permissions may have been expanded,kenil-admin,IAMUser,99.225.26.160,us-east-1,
+2026-04-03T23:54:39Z,CreateAccessKey,HIGH,A new access key was created - these are permanent credentials,kenil-admin,IAMUser,99.225.26.160,us-east-1,
+2026-04-03T23:53:43Z,CreateUser,HIGH,A new IAM user was created - verify this was authorized,kenil-admin,IAMUser,99.225.26.160,us-east-1,
+2026-04-04T20:18:09Z,CreateRole,HIGH,A new IAM role was created - verify its permissions,kenil-admin,IAMUser,99.225.26.160,us-east-1,
+2026-04-04T20:18:09Z,AttachRolePolicy,HIGH,A policy was attached to a role - permissions may have been expanded,kenil-admin,IAMUser,99.225.26.160,us-east-1,
+2026-04-05T02:01:43Z,CreateRole,HIGH,A new IAM role was created - verify its permissions,kenil-admin,IAMUser,99.225.26.160,us-east-1,
+2026-04-05T02:01:43Z,AttachRolePolicy,HIGH,A policy was attached to a role - permissions may have been expanded,kenil-admin,IAMUser,99.225.26.160,us-east-1,
+2026-04-05T02:06:39Z,AttachRolePolicy,HIGH,A policy was attached to a role - permissions may have been expanded,kenil-admin,IAMUser,99.225.26.160,us-east-1,
+2026-04-05T02:24:53Z,CreateRole,HIGH,A new IAM role was created - verify its permissions,kenil-admin,IAMUser,99.225.26.160,us-east-1,
+2026-04-05T02:24:53Z,AttachRolePolicy,HIGH,A policy was attached to a role - permissions may have been expanded,kenil-admin,IAMUser,99.225.26.160,us-east-1,
+2026-04-03T18:39:25Z,ListEnvironments,MEDIUM,Access denied for ListEnvironments - someone tried something they don't have permission for,AWSServiceRoleForResourceExplorer,AssumedRole,resource-explorer-2.amazonaws.com,ca-central-1,AccessDenied
+2026-04-03T23:57:22Z,ListEnvironments,MEDIUM,Access denied for ListEnvironments - someone tried something they don't have permission for,AWSServiceRoleForResourceExplorer,AssumedRole,resource-explorer-2.amazonaws.com,ca-central-1,AccessDenied
+2026-04-03T23:57:28Z,ListCustomDataIdentifiers,MEDIUM,Access denied for ListCustomDataIdentifiers - someone tried something they don't have permission for,AWSServiceRoleForResourceExplorer,AssumedRole,resource-explorer-2.amazonaws.com,ca-central-1,AccessDenied
+2026-04-05T02:01:45Z,CreateFunction20150331,MEDIUM,A new Lambda function was created,kenil-admin,IAMUser,99.225.26.160,ca-central-1,InvalidParameterValueException
+2026-04-05T02:01:44Z,CreateFunction20150331,MEDIUM,A new Lambda function was created,kenil-admin,IAMUser,99.225.26.160,ca-central-1,InvalidParameterValueException
+2026-04-05T02:01:48Z,CreateFunction20150331,MEDIUM,A new Lambda function was created,kenil-admin,IAMUser,99.225.26.160,ca-central-1,InvalidParameterValueException
+2026-04-05T02:01:52Z,CreateFunction20150331,MEDIUM,A new Lambda function was created,kenil-admin,IAMUser,99.225.26.160,ca-central-1,
+2026-04-03T18:34:07Z,GetCostAndUsage,MEDIUM,Access denied for GetCostAndUsage - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-03T18:34:56Z,DescribeRegisteredRegions,MEDIUM,Access denied for DescribeRegisteredRegions - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-03T18:36:00Z,GetCostAndUsage,MEDIUM,Access denied for GetCostAndUsage - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-03T18:36:00Z,GetCostForecast,MEDIUM,Access denied for GetCostForecast - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-03T18:35:19Z,DescribeRegisteredRegions,MEDIUM,Access denied for DescribeRegisteredRegions - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-03T18:35:55Z,DescribeRegisteredRegions,MEDIUM,Access denied for DescribeRegisteredRegions - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-03T23:03:35Z,GetCostAndUsage,MEDIUM,Access denied for GetCostAndUsage - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-03T23:03:38Z,DescribeRegisteredRegions,MEDIUM,Access denied for DescribeRegisteredRegions - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-03T23:03:47Z,GetAccountEmailAddress,MEDIUM,Access denied for GetAccountEmailAddress - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-03T23:03:47Z,GetAccountName,MEDIUM,Access denied for GetAccountName - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-03T23:03:47Z,DescribeRegisteredRegions,MEDIUM,Access denied for DescribeRegisteredRegions - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-03T23:03:35Z,GetCostForecast,MEDIUM,Access denied for GetCostForecast - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-03T23:04:10Z,DescribeRegisteredRegions,MEDIUM,Access denied for DescribeRegisteredRegions - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-03T23:20:22Z,GetCostAndUsage,MEDIUM,Access denied for GetCostAndUsage - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-03T23:20:22Z,GetCostForecast,MEDIUM,Access denied for GetCostForecast - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-03T23:52:21Z,DescribeRegisteredRegions,MEDIUM,Access denied for DescribeRegisteredRegions - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-03T23:52:15Z,DescribeRegisteredRegions,MEDIUM,Access denied for DescribeRegisteredRegions - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-03T23:52:19Z,DescribeRegisteredRegions,MEDIUM,Access denied for DescribeRegisteredRegions - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-03T23:52:05Z,GetCostAndUsage,MEDIUM,Access denied for GetCostAndUsage - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-03T23:54:11Z,DescribeRegisteredRegions,MEDIUM,Access denied for DescribeRegisteredRegions - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-03T23:54:13Z,DescribeRegisteredRegions,MEDIUM,Access denied for DescribeRegisteredRegions - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-03T23:54:33Z,DescribeRegisteredRegions,MEDIUM,Access denied for DescribeRegisteredRegions - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-03T23:54:47Z,GetCostAndUsage,MEDIUM,Access denied for GetCostAndUsage - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-03T23:54:47Z,GetCostForecast,MEDIUM,Access denied for GetCostForecast - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-03T23:54:58Z,GetCostAndUsage,MEDIUM,Access denied for GetCostAndUsage - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-03T23:52:05Z,GetCostForecast,MEDIUM,Access denied for GetCostForecast - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-03T23:58:03Z,GetCostForecast,MEDIUM,Access denied for GetCostForecast - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-03T23:58:03Z,GetCostAndUsage,MEDIUM,Access denied for GetCostAndUsage - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-04T17:38:15Z,GetCostForecast,MEDIUM,Access denied for GetCostForecast - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-04T17:38:15Z,GetCostAndUsage,MEDIUM,Access denied for GetCostAndUsage - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-04T17:38:22Z,DescribeRegisteredRegions,MEDIUM,Access denied for DescribeRegisteredRegions - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-04T17:38:18Z,DescribeRegisteredRegions,MEDIUM,Access denied for DescribeRegisteredRegions - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-04T17:38:19Z,DescribeRegisteredRegions,MEDIUM,Access denied for DescribeRegisteredRegions - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-04T17:38:57Z,GetCostAndUsage,MEDIUM,Access denied for GetCostAndUsage - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-04T17:38:57Z,GetCostForecast,MEDIUM,Access denied for GetCostForecast - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-04T17:39:01Z,GetCostAndUsage,MEDIUM,Access denied for GetCostAndUsage - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-04T17:39:47Z,GetCostForecast,MEDIUM,Access denied for GetCostForecast - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-04T17:39:54Z,GetCostAndUsage,MEDIUM,Access denied for GetCostAndUsage - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-04T17:39:47Z,GetCostAndUsage,MEDIUM,Access denied for GetCostAndUsage - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-04T17:39:55Z,GetCostForecast,MEDIUM,Access denied for GetCostForecast - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-04T17:39:59Z,DescribeRegisteredRegions,MEDIUM,Access denied for DescribeRegisteredRegions - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-04T18:23:48Z,GetCostForecast,MEDIUM,Access denied for GetCostForecast - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-04T18:23:48Z,GetCostAndUsage,MEDIUM,Access denied for GetCostAndUsage - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-04T19:48:10Z,GetCostAndUsage,MEDIUM,Access denied for GetCostAndUsage - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-04T19:49:17Z,GetCostForecast,MEDIUM,Access denied for GetCostForecast - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-04T19:49:17Z,GetCostAndUsage,MEDIUM,Access denied for GetCostAndUsage - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-04T19:48:10Z,GetCostForecast,MEDIUM,Access denied for GetCostForecast - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-04T19:53:08Z,GetCostAndUsage,MEDIUM,Access denied for GetCostAndUsage - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-04T19:53:08Z,GetCostForecast,MEDIUM,Access denied for GetCostForecast - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-04T20:03:04Z,GetCostAndUsage,MEDIUM,Access denied for GetCostAndUsage - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-04T20:03:04Z,GetCostForecast,MEDIUM,Access denied for GetCostForecast - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-04T20:20:48Z,GetCostAndUsage,MEDIUM,Access denied for GetCostAndUsage - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-04T20:20:48Z,GetCostForecast,MEDIUM,Access denied for GetCostForecast - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-04T20:28:25Z,GetCostAndUsage,MEDIUM,Access denied for GetCostAndUsage - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-04T20:29:34Z,GetCostAndUsage,MEDIUM,Access denied for GetCostAndUsage - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-04T20:29:34Z,GetCostForecast,MEDIUM,Access denied for GetCostForecast - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-04T20:28:55Z,GetCostForecast,MEDIUM,Access denied for GetCostForecast - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-04T20:28:25Z,GetCostForecast,MEDIUM,Access denied for GetCostForecast - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-04T20:28:55Z,GetCostAndUsage,MEDIUM,Access denied for GetCostAndUsage - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-05T01:57:42Z,GetCostAndUsage,MEDIUM,Access denied for GetCostAndUsage - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-05T01:57:42Z,GetCostForecast,MEDIUM,Access denied for GetCostForecast - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-05T02:06:05Z,DescribeRegisteredRegions,MEDIUM,Access denied for DescribeRegisteredRegions - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-05T02:06:39Z,DescribeRegisteredRegions,MEDIUM,Access denied for DescribeRegisteredRegions - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-05T02:05:25Z,DescribeRegisteredRegions,MEDIUM,Access denied for DescribeRegisteredRegions - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-05T02:20:21Z,GetCostAndUsage,MEDIUM,Access denied for GetCostAndUsage - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-05T02:20:21Z,GetCostForecast,MEDIUM,Access denied for GetCostForecast - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-05T02:25:54Z,GetCostAndUsage,MEDIUM,Access denied for GetCostAndUsage - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-05T02:25:54Z,GetCostForecast,MEDIUM,Access denied for GetCostForecast - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-05T19:08:21Z,GetCostAndUsage,MEDIUM,Access denied for GetCostAndUsage - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-05T19:08:21Z,GetCostForecast,MEDIUM,Access denied for GetCostForecast - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-05T19:54:33Z,DescribeRegisteredRegions,MEDIUM,Access denied for DescribeRegisteredRegions - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-05T19:54:26Z,DescribeRegisteredRegions,MEDIUM,Access denied for DescribeRegisteredRegions - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
+2026-04-05T19:54:35Z,DescribeRegisteredRegions,MEDIUM,Access denied for DescribeRegisteredRegions - someone tried something they don't have permission for,kenil-admin,IAMUser,99.225.26.160,us-east-1,AccessDenied
