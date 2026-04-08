@@ -213,7 +213,7 @@ Scheduled Lambda function queries Security Hub every morning for critical/high f
 | Security Services | CloudTrail, GuardDuty, Security Hub |
 | Compute | Lambda (Python 3.12), EventBridge |
 | Storage | S3 |
-| Notifications | SNS, SES |
+| Notifications | SNS |
 | Scanning | Prowler v3.11.3 (CIS AWS Foundations Benchmark v1.4) |
 | Languages | Python 3 |
 | Libraries | Boto3, pandas, Jinja2, urllib |
