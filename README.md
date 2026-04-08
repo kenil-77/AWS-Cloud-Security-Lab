@@ -1,114 +1,207 @@
 # AWS Cloud Security Monitoring & Misconfiguration Detection Lab
 
-**Automated cloud security pipeline that detects threats, scans for misconfigurations, and delivers daily security digests — built entirely on AWS-native and open-source tools.**
+**Automated AWS security posture assessment with real-time threat detection using CloudTrail, GuardDuty, Lambda, and Python.**
 
----
-
-## Project Overview
-
-This project simulates a real-world Security Operations Center (SOC) workflow in AWS. Over four weeks, I built an end-to-end cloud security monitoring pipeline that ingests CloudTrail logs, detects threats with GuardDuty, scans for misconfigurations with Prowler, and centralizes everything in Security Hub — with automated daily email digests summarizing the security posture of the environment.
-
-**Account:** `627917840328` | **Region:** `ca-central-1` | **Platform:** Kali Linux + AWS CLI
+Built by **Kenil Prajapati** · Cybersecurity & Threat Management · Seneca Polytechnic
 
 ---
 
 ## Architecture
 
 ```
-CloudTrail Logs (S3)
-        |
-        v
-CloudTrail Analyzer (Python) ──> Alerts CSV ──> Security Hub (ASFF Import)
-        |                                              ^
-        v                                              |
-GuardDuty ──> EventBridge ──> Lambda (Enricher) ──> SNS (Email)
-                                                       ^
-                                                       |
-Prowler (CIS/AWS Benchmarks) ──────────────────> Security Hub
-                                                       |
-                                                       v
-                                              Lambda (Daily Digest)
-                                                       |
-                                                       v
-                                                SNS (Email Digest)
-                                                       ^
-                                                       |
-                                              EventBridge (Daily 9AM)
+┌─────────────────────────────────────────────────────────────────────┐
+│                         DATA SOURCES                                │
+│  ┌──────────────┐   ┌──────────────┐   ┌──────────────────────┐    │
+│  │  CloudTrail   │   │  GuardDuty   │   │  Prowler (CIS v1.4) │    │
+│  │  API Logging  │   │  Threat Det. │   │  Compliance Scanner  │    │
+│  └──────┬───────┘   └──────┬───────┘   └──────────┬───────────┘    │
+│         │                  │                       │                │
+│  ┌──────▼───────┐   ┌──────▼───────┐   ┌──────────▼───────────┐    │
+│  │  S3 + Boto3  │   │ EventBridge  │   │   Python Wrapper     │    │
+│  │  Log Parsing  │   │ Event Rules  │   │   JSON → Dashboard   │    │
+│  └──────┬───────┘   └──────┬───────┘   └──────────┬───────────┘    │
+│         │                  │                       │                │
+│  ┌──────▼───────┐   ┌──────▼───────┐   ┌──────────▼───────────┐    │
+│  │ Alert Rules  │   │   Lambda     │   │  Jinja2 Dashboard    │    │
+│  │ 6 Detection  │   │  Enrichment  │   │  Severity Scoring    │    │
+│  │ Categories   │   │  + GeoIP     │   │                      │    │
+│  └──────┬───────┘   └──────┬───────┘   └──────────┬───────────┘    │
+│         │                  │                       │                │
+│         └──────────────────┼───────────────────────┘                │
+│                     ┌──────▼───────┐                                │
+│                     │ AWS Security │                                │
+│                     │     Hub      │                                │
+│                     │ ASFF Unified │                                │
+│                     └──────┬───────┘                                │
+│                     ┌──────▼───────┐                                │
+│                     │   Lambda     │◄── EventBridge Cron            │
+│                     │ Daily Digest │    (8am daily)                 │
+│                     └──────┬───────┘                                │
+│                ┌───────────┼───────────┐                            │
+│          ┌─────▼─────┐          ┌─────▼─────┐                      │
+│          │ SNS/Email │          │   Slack   │                      │
+│          │  Alerts   │          │  Webhook  │                      │
+│          └───────────┘          └───────────┘                      │
+└─────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Weekly Breakdown
+## Overview
 
-### Week 1 — CloudTrail Log Analysis
+This project builds a complete cloud security monitoring pipeline across four phases:
 
-Built a Python-based CloudTrail log analyzer that parses raw JSON logs from S3 and flags suspicious API activity.
-
-**What it detects:**
-- Root account usage
-- IAM changes (user creation, policy attachments, access key creation)
-- Security group modifications
-- Console logins without MFA
-- Failed API calls and unauthorized access attempts
-- Activity from unusual regions
-
-**Key file:** `cloudtrail_analyzer.py`
-**Output:** `alerts_20260405_162948.csv` — 94 security alerts with severity ratings
+1. **CloudTrail Log Analysis** — Python script that downloads and analyzes CloudTrail logs from S3, flagging suspicious API calls like unauthorized logins, privilege escalation, and anti-forensics activity.
+2. **GuardDuty Automated Alerting** — Real-time threat detection pipeline using GuardDuty, EventBridge, and a Lambda enrichment function that adds attacker geolocation before sending alerts via SNS.
+3. **Prowler CIS Compliance Scanning** — Automated security posture assessment against CIS AWS Foundations Benchmark with a custom HTML dashboard showing compliance scores by service.
+4. **Security Hub Aggregation & Daily Digest** — Centralized findings from all three sources normalized to ASFF format, with a scheduled Lambda function that emails a daily security summary.
 
 ---
 
-### Week 2 — GuardDuty Threat Detection & Automated Alerting
+## Features
 
-Set up a real-time alerting pipeline: GuardDuty detects threats, EventBridge filters for high-severity findings (≥7.0), Lambda enriches the alert with context, and SNS sends an email notification.
+### Week 1: CloudTrail Log Analyzer
 
-**Pipeline:** `GuardDuty → EventBridge → Lambda (Enricher) → SNS → Email`
+Custom Python script with six detection rule categories:
 
-**Key features:**
-- Severity-based filtering (only HIGH/CRITICAL alerts trigger notifications)
-- Lambda enrichment adds human-readable context to raw GuardDuty findings
-- SNS email delivery with formatted alert details
+| Category | Events Detected | Severity |
+|----------|----------------|----------|
+| Anti-forensics | `StopLogging`, `DeleteTrail`, `UpdateTrail` | CRITICAL |
+| IAM escalation | `CreateUser`, `AttachUserPolicy`, `CreateAccessKey`, `DeactivateMFADevice` | HIGH |
+| Network exposure | `AuthorizeSecurityGroupIngress` with `0.0.0.0/0` | HIGH |
+| Resource abuse | `RunInstances` in unexpected regions | MEDIUM |
+| Console login | Failed logins, logins without MFA, unusual IPs | HIGH |
+| Reconnaissance | `AccessDenied` error patterns | MEDIUM |
 
-**Key files:** `lambda_enricher.py` | `eventbridge_rule.json` | `test_event.json`
+**Results:** Processed 193 log files containing 1,593 events. Detected 38 suspicious events (7 HIGH, 31 MEDIUM) including security group creation, firewall rule changes, access key creation, IAM user creation, and privilege escalation.
 
----
+![CloudTrail Analyzer Output](screenshots/03-cloudtrail-analyzer-output.png)
+*CloudTrail analyzer detecting 38 suspicious events across 193 log files*
 
-### Week 3 — Prowler CIS Benchmark Compliance Scanning
+![CloudTrail HIGH Alerts](screenshots/04-cloudtrail-high-alerts.png)
+*HIGH severity alerts: CreateLoginProfile, AttachUserPolicy, CreateAccessKey, CreateUser*
 
-Ran Prowler v3.11.3 against the AWS account to assess compliance against CIS AWS Foundations Benchmark and AWS Security Best Practices.
-
-**Scan results:**
-- 301 checks executed
-- 46.88% failed (75 checks) | 50.62% passed (81 checks)
-- Output formats: HTML, CSV, JSON-ASFF, JSON-OCSF
-
-**Intentional misconfigurations created for testing:**
-- Public S3 bucket with open ACLs
-- Wide-open security group (0.0.0.0/0 on all ports)
-- Root access key
-- Test IAM user with console access
-
-All intentional misconfigurations were cleaned up after scanning.
-
-**Key files:** `scan_results/` (HTML dashboard, CSV, JSON reports)
+![Alerts CSV Export](screenshots/05-alerts-csv-excel.png)
+*Alert findings exported to CSV for further analysis*
 
 ---
 
-### Week 4 — Security Hub Integration & Daily Digest
+### Week 2: GuardDuty + Automated Alerting
 
-Centralized all findings into AWS Security Hub as a single pane of glass, then built an automated daily digest.
+Event-driven pipeline: GuardDuty → EventBridge → Lambda → SNS → Email
 
-**What was integrated:**
-- GuardDuty findings (auto-integrated)
-- Prowler findings (pushed via `-S` flag + BatchImportFindings API)
-- Custom CloudTrail Analyzer alerts (Python script converts CSV to ASFF format)
+The Lambda enrichment function extracts the attacker IP from each GuardDuty finding, queries a geolocation API for country, city, ISP, and organization data, and formats a clean alert before publishing to SNS.
+
+**Pipeline stages demonstrated:**
+
+| Stage | Before Lambda | After Lambda |
+|-------|--------------|--------------|
+| Alert format | Raw JSON blob | Formatted report with sections |
+| Attacker info | IP address only | IP + country, city, ISP, org, AS number |
+| Email subject | Generic "AWS Notification" | `[HIGH] GuardDuty: UnauthorizedAccess:EC2/SSHBruteForce` |
+
+![GuardDuty Enabled](screenshots/06-guardduty-enabled.png)
+*GuardDuty successfully enabled in ca-central-1*
+
+![GuardDuty Findings](screenshots/07-guardduty-findings-list.png)
+*384 sample findings generated across all severity levels*
+
+![GuardDuty Finding Detail](screenshots/08-guardduty-finding-detail.png)
+*Finding detail: S3 Public Anonymous Access — HIGH severity*
+
+![Raw JSON Alerts](screenshots/12-raw-json-alert-emails.png)
+*Before Lambda enrichment: raw JSON alert emails*
+
+![Enriched Alert - SSH BruteForce](screenshots/13-enriched-alert-ssh-bruteforce.png)
+*After Lambda enrichment: formatted alert with attacker geolocation (Germany, Brandenburg, ForPrivacyNET)*
+
+![Enriched Alert - RDS Anomalous Login](screenshots/14-enriched-alert-rds-anomalous.png)
+*Enriched alert: RDS anomalous login behavior detected*
+
+---
+
+### Week 3: Prowler CIS Compliance Scanning
+
+Prowler v3.11.3 scan against CIS AWS Foundations Benchmark running on Kali Linux.
+
+**Scan Results:**
+
+| Metric | Value |
+|--------|-------|
+| Total checks | 187 |
+| Passed | 95 |
+| Failed | 88 |
+| Compliance score | 51.9% |
+| Critical findings | 1 |
+| High findings | 7 |
+| Medium findings | 64 |
+| Low findings | 16 |
+
+**Key findings detected:**
+- **CRITICAL:** Root account access key exists
+- **HIGH:** Security groups allow ingress from `0.0.0.0/0` to all ports
+- **HIGH:** Default VPC security group allows traffic
+- **HIGH:** GuardDuty high severity findings unaddressed
+- **MEDIUM:** CloudWatch log metric filters missing for IAM changes, root usage, VPC changes
+- **MEDIUM:** EBS default encryption not activated
+
+![Prowler Running on Kali](screenshots/15-prowler-running-kali.png)
+*Prowler executing 301 checks against AWS account from Kali Linux*
+
+![Prowler Output Files](screenshots/16-prowler-output-files.png)
+*Scan output in JSON, CSV, and HTML formats*
+
+![Prowler Built-in Report](screenshots/17-prowler-builtin-report.png)
+*Prowler's built-in HTML assessment report*
+
+**Custom Security Posture Dashboard:**
+
+Built a Python dashboard generator (`prowler_dashboard.py`) that parses Prowler JSON output and generates a professional HTML dashboard with compliance ring, severity distribution, service breakdown, and detailed finding cards with remediation guidance.
+
+![Custom Dashboard - Score](screenshots/19-custom-dashboard-score.png)
+*Custom dashboard: 51.9% compliance score with severity breakdown*
+
+![Custom Dashboard - Services](screenshots/20-custom-dashboard-services.png)
+*Service breakdown: IAM at 68%, EC2 at 83%, CloudTrail at 27%, CloudWatch at 16%*
+
+![Custom Dashboard - Findings](screenshots/21-custom-dashboard-findings.png)
+*Critical and High finding cards with risk context and remediation steps*
+
+---
+
+### Week 4: Security Hub Integration & Daily Digest
+
+All three data sources unified in AWS Security Hub using ASFF (AWS Security Finding Format).
+
+**Integration summary:**
+
+| Source | Findings Imported | Method |
+|--------|------------------|--------|
+| GuardDuty | Automatic | Native integration |
+| Prowler | Via `--send-sh-findings` flag | `BatchImportFindings` API |
+| CloudTrail Analyzer | 94 custom alerts | Python import script |
+
+![Security Hub Findings](screenshots/22-securityhub-findings-list.png)
+*Security Hub aggregating findings from multiple sources*
+
+![Security Hub Standards](screenshots/23-securityhub-standards.png)
+*Security standards enabled: AWS Foundational Security Best Practices + CIS Benchmark*
+
+![Security Hub Finding Detail](screenshots/24-securityhub-finding-detail.png)
+*Finding detail view with compliance status and remediation link*
+
+![Security Hub Import](screenshots/26-securityhub-import-script.png)
+*Custom import script: 94 CloudTrail alerts successfully imported to Security Hub*
 
 **Daily Digest Lambda:**
-- Queries Security Hub for CRITICAL and HIGH findings from the last 24 hours
-- Groups findings by source (CloudTrail-Analyzer, Prowler, Security Hub)
-- Sends formatted summary via SNS email
-- Scheduled via EventBridge to run daily at 9:00 AM EDT
 
-**Key files:** `import_to_securityhub.py` | `daily_digest_lambda.py` | `eventbridge_schedule.json`
+Scheduled Lambda function queries Security Hub every morning for critical/high findings from the last 24 hours and sends a formatted email summary.
+
+![Daily Digest Email](screenshots/28-daily-digest-email.png)
+*Daily digest: 15 Critical, 75 High findings broken down by source (CloudTrail-Analyzer, Prowler, Security Hub)*
+
+![EventBridge Schedule](screenshots/29-eventbridge-daily-schedule.png)
+*EventBridge cron rule: triggers daily at 13:00 UTC (8am EST)*
 
 ---
 
@@ -117,128 +210,122 @@ Centralized all findings into AWS Security Hub as a single pane of glass, then b
 | Category | Tools |
 |----------|-------|
 | Cloud Platform | AWS (ca-central-1) |
-| Threat Detection | Amazon GuardDuty |
-| Compliance Scanning | Prowler v3.11.3 |
-| Log Analysis | Custom Python (CloudTrail Analyzer) |
-| Centralized Dashboard | AWS Security Hub (ASFF) |
-| Automation | AWS Lambda (Python 3.12) |
-| Event Routing | Amazon EventBridge |
-| Notifications | Amazon SNS |
-| Log Storage | Amazon S3 + CloudTrail |
-| Development Environment | Kali Linux, AWS CLI, boto3 |
+| Security Services | CloudTrail, GuardDuty, Security Hub |
+| Compute | Lambda (Python 3.12), EventBridge |
+| Storage | S3 |
+| Notifications | SNS, SES |
+| Scanning | Prowler v3.11.3 (CIS AWS Foundations Benchmark v1.4) |
+| Languages | Python 3 |
+| Libraries | Boto3, pandas, Jinja2, urllib |
+| Environment | Windows 11, Kali Linux (VMware) |
+| Compliance | CIS AWS Foundations Benchmark, ASFF |
 
 ---
 
 ## Project Structure
 
 ```
-aws/
-├── cloudtrail_analyzer.py          # Week 1: CloudTrail log parser
-├── alerts_20260405_162948.csv       # Week 1: Generated security alerts
-├── output/                         # Week 1: Analyzer output files
-│
-├── week2/                          # Week 2: GuardDuty alerting pipeline
-│   ├── lambda_enricher.py
-│   ├── eventbridge_rule.json
-│   └── test_event.json
-│
-├── scan_results/                   # Week 3: Prowler scan outputs
-│   ├── prowler-output-*.html       # Interactive HTML dashboard
-│   ├── prowler-output-*.csv        # CSV findings
-│   ├── prowler-output-*.asff.json  # ASFF format for Security Hub
-│   └── prowler-output-*.ocsf.json  # OCSF format
-│
-├── week4/                          # Week 4: Security Hub integration
-│   ├── import_to_securityhub.py    # ASFF importer for custom alerts
-│   ├── daily_digest_lambda.py      # Daily digest Lambda function
-│   ├── eventbridge_schedule.json   # Scheduled trigger config
-│   └── register_product.py        # Security Hub custom action setup
-│
-├── prowler_dashboard.py            # Prowler results dashboard
-└── prowler_dashboard1.py           # Dashboard variant
+aws-cloud-security-lab/
+├── week1/
+│   ├── cloudtrail_analyzer.py          # CloudTrail log analysis script
+│   └── sample_output/
+│       └── alerts_20260404_133111.csv   # Sample alert output
+├── week2/
+│   ├── lambda_enricher.py              # GuardDuty enrichment Lambda
+│   ├── eventbridge_rule.json           # EventBridge event pattern
+│   └── test_event.json                 # Sample GuardDuty test event
+├── week3/
+│   ├── prowler_dashboard.py            # Custom HTML dashboard generator
+│   ├── prowler_dashboard.html          # Generated dashboard
+│   └── scan_results/
+│       ├── prowler-output-*.json       # Raw scan results
+│       ├── prowler-output-*.csv        # CSV export
+│       └── prowler-output-*.html       # Prowler built-in report
+├── week4/
+│   ├── import_to_securityhub.py        # ASFF import script
+│   ├── daily_digest_lambda.py          # Daily digest Lambda function
+│   └── eventbridge_schedule.json       # Cron schedule configuration
+├── screenshots/                        # All project evidence
+└── README.md
 ```
 
 ---
 
-## Key Outcomes
-
-- **168 custom CloudTrail alerts** imported into Security Hub via ASFF
-- **75 Prowler compliance failures** identified across IAM, S3, VPC, CloudWatch
-- **14 CRITICAL findings** including missing root MFA, public S3 buckets, permissive IAM policies
-- **90 actionable findings** (CRITICAL + HIGH) surfaced in the daily digest
-- **3 security data sources** unified in one dashboard (GuardDuty + Prowler + CloudTrail Analyzer)
-- **Fully automated** daily security posture email at 9:00 AM EDT
-
----
-
-## What I Learned
-
-- How to parse and analyze CloudTrail logs programmatically to detect suspicious API activity
-- Building event-driven security pipelines with GuardDuty, EventBridge, and Lambda
-- Running CIS benchmark compliance scans with Prowler and interpreting the results
-- Converting security findings to AWS Security Finding Format (ASFF) for Security Hub ingestion
-- Centralizing multi-source security data into a single pane of glass
-- Automating security reporting with Lambda, SNS, and scheduled EventBridge rules
-- The importance of severity-based filtering to reduce alert fatigue in a SOC environment
-
----
-
-## Setup Instructions
+## Setup & Replication
 
 ### Prerequisites
-- AWS account with IAM user (programmatic + console access)
-- AWS CLI configured with appropriate permissions
-- Python 3.x with boto3
-- Prowler v3.x installed
-- Kali Linux (or any Linux distribution)
+
+- AWS Account (Free Tier eligible)
+- Python 3.10+
+- AWS CLI configured with admin credentials
+- Prowler v3.11.3+ (`pip install prowler`)
+- Boto3 and pandas (`pip install boto3 pandas jinja2`)
 
 ### Quick Start
 
-1. **Clone this repository**
-   ```bash
-   git clone https://github.com/kenilprajapati/aws-cloud-security-lab.git
-   cd aws-cloud-security-lab
-   ```
+**1. CloudTrail Analyzer**
+```bash
+# Update BUCKET_NAME and ACCOUNT_ID in the script
+cd week1
+python cloudtrail_analyzer.py
+```
 
-2. **Configure AWS CLI**
-   ```bash
-   aws configure
-   # Region: ca-central-1
-   ```
+**2. GuardDuty Alerting**
+```
+Enable GuardDuty → Create SNS topic → Deploy lambda_enricher.py to Lambda
+→ Create EventBridge rule with eventbridge_rule.json → Target: Lambda function
+```
 
-3. **Run CloudTrail Analyzer (Week 1)**
-   ```bash
-   python3 cloudtrail_analyzer.py
-   ```
+**3. Prowler Scan**
+```bash
+prowler aws --region ca-central-1 --output-formats json-ocsf csv html --output-directory week3/scan_results
+cd week3
+python prowler_dashboard.py
+```
 
-4. **Run Prowler Scan (Week 3)**
-   ```bash
-   prowler aws --region ca-central-1 -S
-   ```
+**4. Security Hub Integration**
+```bash
+# Enable Security Hub in console
+# Import Prowler findings
+prowler aws --region ca-central-1 --send-sh-findings
 
-5. **Import findings to Security Hub (Week 4)**
-   ```bash
-   python3 week4/import_to_securityhub.py
-   ```
-
----
-
-## Screenshots
-
-Screenshots of the complete project are available in each week's screenshots folder, including:
-- Security Hub dashboard with multi-source findings
-- GuardDuty threat detection alerts
-- Prowler compliance scan results
-- Daily digest email notifications
-- Lambda execution results
-- EventBridge scheduled rules
+# Import CloudTrail alerts
+cd week4
+python import_to_securityhub.py
+```
 
 ---
 
-## Author
+## Key Learnings
 
-**Kenilkumar Prajapati**
-Cybersecurity & Threat Management — Seneca Polytechnic (Graduating August 2025)
-ISC2 CC Certified | AWS Academy Cloud Security Foundations
+**Cloud Security Fundamentals** — Hands-on experience with the three pillars of cloud security: prevention (IAM policies, least privilege), detection (GuardDuty ML-based threat detection, CloudTrail audit logging), and compliance (CIS Benchmarks, security posture assessment).
+
+**Event-Driven Architecture** — Built a real-time alerting pipeline using EventBridge event patterns, Lambda serverless functions, and SNS pub/sub messaging. Learned how AWS services communicate asynchronously through events.
+
+**Security Data Engineering** — Parsed and normalized security findings from three different sources (CloudTrail JSON logs, GuardDuty findings, Prowler JSON output) into a unified ASFF format for centralized analysis in Security Hub.
+
+**Detection Engineering** — Wrote custom detection rules for six categories of suspicious activity. Learned the difference between high-fidelity alerts (StopLogging = always suspicious) and noisy alerts (AccessDenied from AWS internal services = usually benign).
+
+**Compliance & Reporting** — Ran CIS AWS Foundations Benchmark checks, interpreted results, and built executive-level visual dashboards that translate technical findings into actionable compliance scores.
 
 ---
+
+## Cost
+
+Everything runs on AWS Free Tier. GuardDuty has a 30-day free trial, Lambda provides 1M free requests/month, and S3 storage costs were under $0.10. Total project cost: **< $5 CAD**.
+
+---
+
+## License
+
+MIT License — see [LICENSE](LICENSE) for details.
+
+---
+
+## Contact
+
+**Kenil Prajapati**
+- Program: Cybersecurity & Threat Management — Seneca Polytechnic (Graduating August 2025)
+- Certifications: ISC2 CC, AWS Academy Cloud Security Foundations
+- LinkedIn: [Connect with me](https://linkedin.com/in/your-linkedin)
+- GitHub: [github.com/your-username](https://github.com/your-username)
