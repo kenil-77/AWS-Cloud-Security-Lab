@@ -11,21 +11,21 @@ Built by **Kenil Prajapati** · Cybersecurity & Threat Management · Seneca Poly
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
 │                         DATA SOURCES                                │
-│  ┌──────────────┐   ┌──────────────┐   ┌──────────────────────┐    │
-│  │  CloudTrail   │   │  GuardDuty   │   │  Prowler (CIS v1.4) │    │
-│  │  API Logging  │   │  Threat Det. │   │  Compliance Scanner  │    │
-│  └──────┬───────┘   └──────┬───────┘   └──────────┬───────────┘    │
+│  ┌──────────────┐   ┌──────────────┐   ┌──────────────────────┐     │
+│  │  CloudTrail  │   │  GuardDuty   │   │  Prowler (CIS v1.4)  │     │
+│  │  API Logging │   │  Threat Det. │   │  Compliance Scanner  │     │
+│  └──────┬───────┘   └──────┬───────┘   └──────────┬───────────┘     │
 │         │                  │                       │                │
-│  ┌──────▼───────┐   ┌──────▼───────┐   ┌──────────▼───────────┐    │
-│  │  S3 + Boto3  │   │ EventBridge  │   │   Python Wrapper     │    │
-│  │  Log Parsing  │   │ Event Rules  │   │   JSON → Dashboard   │    │
-│  └──────┬───────┘   └──────┬───────┘   └──────────┬───────────┘    │
+│  ┌──────▼───────┐   ┌──────▼───────┐   ┌──────────▼───────────┐     │
+│  │  S3 + Boto3  │   │ EventBridge  │   │   Python Wrapper     │     │
+│  │  Log Parsing │   │ Event Rules  │   │   JSON → Dashboard   │     │
+│  └──────┬───────┘   └──────┬───────┘   └──────────┬───────────┘     │
 │         │                  │                       │                │
-│  ┌──────▼───────┐   ┌──────▼───────┐   ┌──────────▼───────────┐    │
-│  │ Alert Rules  │   │   Lambda     │   │  Jinja2 Dashboard    │    │
-│  │ 6 Detection  │   │  Enrichment  │   │  Severity Scoring    │    │
-│  │ Categories   │   │  + GeoIP     │   │                      │    │
-│  └──────┬───────┘   └──────┬───────┘   └──────────┬───────────┘    │
+│  ┌──────▼───────┐   ┌──────▼───────┐   ┌──────────▼───────────┐     │
+│  │ Alert Rules  │   │   Lambda     │   │  Python Dashboard    │     │
+│  │ 6 Detection  │   │  Enrichment  │   │  Severity Scoring    │     │
+│  │ Categories   │   │  + GeoIP     │   │                      │     │
+│  └──────┬───────┘   └──────┬───────┘   └──────────┬───────────┘     │
 │         │                  │                       │                │
 │         └──────────────────┼───────────────────────┘                │
 │                     ┌──────▼───────┐                                │
@@ -35,13 +35,13 @@ Built by **Kenil Prajapati** · Cybersecurity & Threat Management · Seneca Poly
 │                     └──────┬───────┘                                │
 │                     ┌──────▼───────┐                                │
 │                     │   Lambda     │◄── EventBridge Cron            │
-│                     │ Daily Digest │    (8am daily)                 │
+│                     │ Daily Digest │    (9AM Daily)                 │
 │                     └──────┬───────┘                                │
-│                ┌───────────┼───────────┐                            │
-│          ┌─────▼─────┐          ┌─────▼─────┐                      │
-│          │ SNS/Email │          │   Slack   │                      │
-│          │  Alerts   │          │  Webhook  │                      │
-│          └───────────┘          └───────────┘                      │
+│                            ┼                                        │
+│                      ┌─────▼─────┐                                  │
+│                      │ SNS/Email │                                  │
+│                      │  Alerts   │                                  │
+│                      └───────────┘                                  │
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -51,10 +51,10 @@ Built by **Kenil Prajapati** · Cybersecurity & Threat Management · Seneca Poly
 
 This project builds a complete cloud security monitoring pipeline across four phases:
 
-1. **CloudTrail Log Analysis** — Python script that downloads and analyzes CloudTrail logs from S3, flagging suspicious API calls like unauthorized logins, privilege escalation, and anti-forensics activity.
-2. **GuardDuty Automated Alerting** — Real-time threat detection pipeline using GuardDuty, EventBridge, and a Lambda enrichment function that adds attacker geolocation before sending alerts via SNS.
-3. **Prowler CIS Compliance Scanning** — Automated security posture assessment against CIS AWS Foundations Benchmark with a custom HTML dashboard showing compliance scores by service.
-4. **Security Hub Aggregation & Daily Digest** — Centralized findings from all three sources normalized to ASFF format, with a scheduled Lambda function that emails a daily security summary.
+1. **CloudTrail Log Analysis** - Python script that downloads and analyzes CloudTrail logs from S3, flagging suspicious API calls like unauthorized logins, privilege escalation, and anti-forensics activity.
+2. **GuardDuty Automated Alerting** - Real-time threat detection pipeline using GuardDuty, EventBridge, and a Lambda enrichment function that adds attacker geolocation before sending alerts via SNS.
+3. **Prowler CIS Compliance Scanning** - Automated security posture assessment against CIS AWS Foundations Benchmark with a custom HTML dashboard showing compliance scores by service.
+4. **Security Hub Aggregation & Daily Digest** - Centralized findings from all three sources normalized to ASFF format, with a scheduled Lambda function that emails a daily security summary.
 
 ---
 
@@ -75,13 +75,13 @@ Custom Python script with six detection rule categories:
 
 **Results:** Processed 193 log files containing 1,593 events. Detected 38 suspicious events (7 HIGH, 31 MEDIUM) including security group creation, firewall rule changes, access key creation, IAM user creation, and privilege escalation.
 
-![CloudTrail Analyzer Output](screenshots/03-cloudtrail-analyzer-output.png)
+![CloudTrail Analyzer Output](AWS-ss/3.png)
 *CloudTrail analyzer detecting 38 suspicious events across 193 log files*
 
-![CloudTrail HIGH Alerts](screenshots/04-cloudtrail-high-alerts.png)
+![CloudTrail HIGH Alerts](AWS-ss/4.png)
 *HIGH severity alerts: CreateLoginProfile, AttachUserPolicy, CreateAccessKey, CreateUser*
 
-![Alerts CSV Export](screenshots/05-alerts-csv-excel.png)
+![Alerts CSV Export](AWS-ss/5.png)
 *Alert findings exported to CSV for further analysis*
 
 ---
@@ -100,22 +100,22 @@ The Lambda enrichment function extracts the attacker IP from each GuardDuty find
 | Attacker info | IP address only | IP + country, city, ISP, org, AS number |
 | Email subject | Generic "AWS Notification" | `[HIGH] GuardDuty: UnauthorizedAccess:EC2/SSHBruteForce` |
 
-![GuardDuty Enabled](screenshots/06-guardduty-enabled.png)
+![GuardDuty Enabled](AWS-ss/6.png)
 *GuardDuty successfully enabled in ca-central-1*
 
-![GuardDuty Findings](screenshots/07-guardduty-findings-list.png)
+![GuardDuty Findings](AWS-ss/7.png)
 *384 sample findings generated across all severity levels*
 
-![GuardDuty Finding Detail](screenshots/08-guardduty-finding-detail.png)
+![GuardDuty Finding Detail](AWS-ss/8.png)
 *Finding detail: S3 Public Anonymous Access — HIGH severity*
 
-![Raw JSON Alerts](screenshots/12-raw-json-alert-emails.png)
+![Raw JSON Alerts](AWS-ss/12.png)
 *Before Lambda enrichment: raw JSON alert emails*
 
-![Enriched Alert - SSH BruteForce](screenshots/13-enriched-alert-ssh-bruteforce.png)
+![Enriched Alert - SSH BruteForce](AWS-ss/13.png)
 *After Lambda enrichment: formatted alert with attacker geolocation (Germany, Brandenburg, ForPrivacyNET)*
 
-![Enriched Alert - RDS Anomalous Login](screenshots/14-enriched-alert-rds-anomalous.png)
+![Enriched Alert - RDS Anomalous Login](AWS-ss/14.png)
 *Enriched alert: RDS anomalous login behavior detected*
 
 ---
@@ -145,26 +145,26 @@ Prowler v3.11.3 scan against CIS AWS Foundations Benchmark running on Kali Linux
 - **MEDIUM:** CloudWatch log metric filters missing for IAM changes, root usage, VPC changes
 - **MEDIUM:** EBS default encryption not activated
 
-![Prowler Running on Kali](screenshots/15-prowler-running-kali.png)
+![Prowler Running on Kali](AWS-ss/15.png)
 *Prowler executing 301 checks against AWS account from Kali Linux*
 
-![Prowler Output Files](screenshots/16-prowler-output-files.png)
+![Prowler Output Files](AWS-ss/16.png)
 *Scan output in JSON, CSV, and HTML formats*
 
-![Prowler Built-in Report](screenshots/17-prowler-builtin-report.png)
+![Prowler Built-in Report](AWS-ss/17.png)
 *Prowler's built-in HTML assessment report*
 
 **Custom Security Posture Dashboard:**
 
 Built a Python dashboard generator (`prowler_dashboard.py`) that parses Prowler JSON output and generates a professional HTML dashboard with compliance ring, severity distribution, service breakdown, and detailed finding cards with remediation guidance.
 
-![Custom Dashboard - Score](screenshots/19-custom-dashboard-score.png)
+![Custom Dashboard - Score](AWS-ss/19.png)
 *Custom dashboard: 51.9% compliance score with severity breakdown*
 
-![Custom Dashboard - Services](screenshots/20-custom-dashboard-services.png)
+![Custom Dashboard - Services](AWS-ss/20.png)
 *Service breakdown: IAM at 68%, EC2 at 83%, CloudTrail at 27%, CloudWatch at 16%*
 
-![Custom Dashboard - Findings](screenshots/21-custom-dashboard-findings.png)
+![Custom Dashboard - Findings](AWS-ss/21.png)
 *Critical and High finding cards with risk context and remediation steps*
 
 ---
@@ -181,26 +181,26 @@ All three data sources unified in AWS Security Hub using ASFF (AWS Security Find
 | Prowler | Via `--send-sh-findings` flag | `BatchImportFindings` API |
 | CloudTrail Analyzer | 94 custom alerts | Python import script |
 
-![Security Hub Findings](screenshots/22-securityhub-findings-list.png)
+![Security Hub Findings](AWS-ss/22.png)
 *Security Hub aggregating findings from multiple sources*
 
-![Security Hub Standards](screenshots/23-securityhub-standards.png)
+![Security Hub Standards](AWS-ss/23.png)
 *Security standards enabled: AWS Foundational Security Best Practices + CIS Benchmark*
 
-![Security Hub Finding Detail](screenshots/24-securityhub-finding-detail.png)
+![Security Hub Finding Detail](AWS-ss/24.png)
 *Finding detail view with compliance status and remediation link*
 
-![Security Hub Import](screenshots/26-securityhub-import-script.png)
+![Security Hub Import](AWS-ss/26.png)
 *Custom import script: 94 CloudTrail alerts successfully imported to Security Hub*
 
 **Daily Digest Lambda:**
 
 Scheduled Lambda function queries Security Hub every morning for critical/high findings from the last 24 hours and sends a formatted email summary.
 
-![Daily Digest Email](screenshots/28-daily-digest-email.png)
+![Daily Digest Email](AWS-ss/28.png)
 *Daily digest: 15 Critical, 75 High findings broken down by source (CloudTrail-Analyzer, Prowler, Security Hub)*
 
-![EventBridge Schedule](screenshots/29-eventbridge-daily-schedule.png)
+![EventBridge Schedule](AWS-ss/29.png)
 *EventBridge cron rule: triggers daily at 13:00 UTC (8am EST)*
 
 ---
@@ -245,7 +245,7 @@ aws-cloud-security-lab/
 │   ├── import_to_securityhub.py        # ASFF import script
 │   ├── daily_digest_lambda.py          # Daily digest Lambda function
 │   └── eventbridge_schedule.json       # Cron schedule configuration
-├── screenshots/                        # All project evidence
+├── AWS-ss/                        # All project evidence
 └── README.md
 ```
 
@@ -325,7 +325,3 @@ MIT License — see [LICENSE](LICENSE) for details.
 ## Contact
 
 **Kenil Prajapati**
-- Program: Cybersecurity & Threat Management — Seneca Polytechnic (Graduating August 2025)
-- Certifications: ISC2 CC, AWS Academy Cloud Security Foundations
-- LinkedIn: [Connect with me](https://linkedin.com/in/your-linkedin)
-- GitHub: [github.com/your-username](https://github.com/your-username)
