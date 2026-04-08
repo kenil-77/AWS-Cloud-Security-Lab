@@ -2,7 +2,6 @@
 
 **Automated AWS security posture assessment with real-time threat detection using CloudTrail, GuardDuty, Lambda, and Python.**
 
-Built by **Kenil Prajapati** · Cybersecurity & Threat Management · Seneca Polytechnic
 
 ---
 
@@ -99,7 +98,7 @@ The Lambda enrichment function extracts the attacker IP from each GuardDuty find
   "source": ["aws.guardduty"],
   "detail-type": ["GuardDuty Finding"],
   "detail": {
-    "severity": [{"numeric": [">=", 4]}]
+    "severity": [{"numeric": [">=", 7]}]
   }
 }
 ```
@@ -412,7 +411,5 @@ MIT License — see [LICENSE](LICENSE) for details.
 ## Contact
 
 **Kenil Prajapati**
-- Program: Cybersecurity & Threat Management — Seneca Polytechnic (Graduating August 2025)
-- Certifications: ISC2 CC, AWS Academy Cloud Security Foundations
 - LinkedIn: [Connect with me](https://www.linkedin.com/in/kenilkumar-prajapati/)
 - GitHub: [github.com/kenil-p](https://github.com/kenil-p)
